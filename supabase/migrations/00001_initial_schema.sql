@@ -87,6 +87,8 @@ CREATE TABLE place_images (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE INDEX idx_place_images_place ON place_images(place_id);
+
 -- ══════════════════════════════════════
 -- REVIEWS
 -- ══════════════════════════════════════
@@ -127,6 +129,8 @@ CREATE TABLE review_items (
 
 CREATE INDEX idx_review_items_review ON review_items(review_id);
 
+CREATE INDEX idx_review_photos_review ON review_photos(review_id);
+
 CREATE TABLE review_item_photos (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   review_item_id UUID NOT NULL REFERENCES review_items(id) ON DELETE CASCADE,
@@ -134,6 +138,8 @@ CREATE TABLE review_item_photos (
   sort_order INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE INDEX idx_review_item_photos_item ON review_item_photos(review_item_id);
 
 -- ══════════════════════════════════════
 -- SAVED PLACES
@@ -172,6 +178,10 @@ CREATE TABLE collection_places (
   added_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE(collection_id, place_id)
 );
+
+CREATE INDEX idx_collection_places_collection ON collection_places(collection_id);
+CREATE INDEX idx_collection_places_place ON collection_places(place_id);
+CREATE INDEX idx_saved_places_place ON saved_places(place_id);
 
 -- ══════════════════════════════════════
 -- TAGS

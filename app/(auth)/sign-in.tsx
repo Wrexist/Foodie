@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { SocialButtons } from '@/features/auth/components/SocialButtons';
 import { useSignIn } from '@/features/auth/hooks/useAuth';
+import { authService } from '@/features/auth/services/auth.service';
 import { signInSchema, type SignInInput } from '@/utils/validation';
 import { KeyboardAvoiding } from '@/components/layout/KeyboardAvoiding';
 import { colors, spacing } from '@/design-system/tokens';
@@ -95,7 +96,10 @@ export default function SignInScreen() {
             <View style={styles.dividerLine} />
           </View>
 
-          <SocialButtons />
+          <SocialButtons
+            onApplePress={() => authService.signInWithApple().catch((e) => Alert.alert('Error', e.message))}
+            onGooglePress={() => authService.signInWithGoogle().catch((e) => Alert.alert('Error', e.message))}
+          />
 
           <Pressable
             style={styles.signUpLink}

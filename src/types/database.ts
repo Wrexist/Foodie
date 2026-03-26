@@ -98,6 +98,11 @@ export interface Database {
         Insert: SubscriptionInsert;
         Update: SubscriptionUpdate;
       };
+      embeddings: {
+        Row: EmbeddingRow;
+        Insert: EmbeddingInsert;
+        Update: EmbeddingUpdate;
+      };
     };
     Functions: Record<string, never>;
     Enums: {
@@ -159,6 +164,7 @@ export interface PlaceRow {
   postal_code: string | null;
   latitude: number | null;
   longitude: number | null;
+  location: string | null; // PostGIS geography, auto-set by trigger
   phone: string | null;
   website: string | null;
   price_level: number | null;
@@ -169,7 +175,7 @@ export interface PlaceRow {
   created_at: string;
   updated_at: string;
 }
-export type PlaceInsert = Omit<PlaceRow, 'id' | 'created_at' | 'updated_at'>;
+export type PlaceInsert = Omit<PlaceRow, 'id' | 'location' | 'created_at' | 'updated_at'>;
 export type PlaceUpdate = Partial<Omit<PlaceRow, 'id' | 'created_at'>>;
 
 // ── Place Image ──
@@ -337,6 +343,18 @@ export interface SubscriptionRow {
 }
 export type SubscriptionInsert = Omit<SubscriptionRow, 'id' | 'created_at' | 'updated_at'>;
 export type SubscriptionUpdate = Partial<Omit<SubscriptionRow, 'id' | 'user_id' | 'created_at'>>;
+
+// ── Embedding ──
+export interface EmbeddingRow {
+  id: string;
+  source_type: 'review' | 'place' | 'user';
+  source_id: string;
+  embedding: number[] | null;
+  created_at: string;
+  updated_at: string;
+}
+export type EmbeddingInsert = Omit<EmbeddingRow, 'id' | 'created_at' | 'updated_at'>;
+export type EmbeddingUpdate = Partial<Pick<EmbeddingRow, 'embedding'>>;
 
 // ── Convenience types for app use ──
 export type User = UserRow;

@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { colors, radii } from '@/design-system/tokens';
+import { colors, radii, spacing } from '@/design-system/tokens';
 
 interface SkeletonProps {
   width: number | string;
@@ -69,6 +69,6 @@ export function SkeletonText({ lines = 3 }: { lines?: number }) {
 
 const styles = StyleSheet.create({
   textContainer: {
-    gap: 4,
+    gap: spacing.xs,
   },
 });

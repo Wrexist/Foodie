@@ -70,6 +70,10 @@ CREATE POLICY "Authenticated users can upload place images"
   ON place_images FOR INSERT
   WITH CHECK (uploaded_by = auth.uid());
 
+CREATE POLICY "Users can delete own place images"
+  ON place_images FOR DELETE
+  USING (uploaded_by = auth.uid());
+
 -- ══════════════════════════════════════
 -- REVIEWS
 -- ══════════════════════════════════════
@@ -100,9 +104,9 @@ CREATE POLICY "Review photos visible with review"
     AND (reviews.is_private = false OR reviews.user_id = auth.uid())
   ));
 
-CREATE POLICY "Users can add photos to own reviews"
-  ON review_photos FOR INSERT
-  WITH CHECK (EXISTS (
+CREATE POLICY "Users can manage photos on own reviews"
+  ON review_photos FOR ALL
+  USING (EXISTS (
     SELECT 1 FROM reviews WHERE reviews.id = review_photos.review_id
     AND reviews.user_id = auth.uid()
   ));
@@ -134,9 +138,9 @@ CREATE POLICY "Review item photos visible with review"
     AND (r.is_private = false OR r.user_id = auth.uid())
   ));
 
-CREATE POLICY "Users can add photos to own review items"
-  ON review_item_photos FOR INSERT
-  WITH CHECK (EXISTS (
+CREATE POLICY "Users can manage photos on own review items"
+  ON review_item_photos FOR ALL
+  USING (EXISTS (
     SELECT 1 FROM review_items ri
     JOIN reviews r ON r.id = ri.review_id
     WHERE ri.id = review_item_photos.review_item_id
@@ -213,6 +217,17 @@ CREATE POLICY "Anyone can view place tags"
   ON place_tags FOR SELECT
   USING (true);
 
+CREATE POLICY "Authenticated users can tag places"
+  ON place_tags FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "Place creators can manage place tags"
+  ON place_tags FOR DELETE
+  USING (EXISTS (
+    SELECT 1 FROM places WHERE places.id = place_tags.place_id
+    AND places.created_by = auth.uid()
+  ));
+
 -- ══════════════════════════════════════
 -- ACTIVITY FEED
 -- ══════════════════════════════════════
@@ -256,6 +271,10 @@ CREATE POLICY "Users can view own notifications"
 
 CREATE POLICY "Users can update own notifications"
   ON notifications FOR UPDATE
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can delete own notifications"
+  ON notifications FOR DELETE
   USING (user_id = auth.uid());
 
 -- ══════════════════════════════════════

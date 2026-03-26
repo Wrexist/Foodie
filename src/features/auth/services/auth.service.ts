@@ -48,9 +48,12 @@ export const authService = {
   },
 
   async setupProfile(userId: string, profile: ProfileSetup) {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const email = sessionData.session?.user?.email ?? '';
+
     const { data, error } = await supabase.from('users').upsert({
       id: userId,
-      email: '',
+      email,
       username: profile.username,
       display_name: profile.display_name,
       bio: profile.bio ?? null,
