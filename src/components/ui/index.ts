@@ -8,3 +8,4 @@ export { Badge } from './Badge';
 export { Skeleton, SkeletonText } from './Skeleton';
 export { EmptyState } from './EmptyState';
 export { StarRating } from './StarRating';
+export { PhotoGrid } from './PhotoGrid';
