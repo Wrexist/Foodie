@@ -32,7 +32,8 @@ export function usePlaceReviews(placeId: string) {
     queryFn: ({ pageParam = 0 }) => reviewsService.getByPlace(placeId, pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0 ? allPages.length : undefined;
+      const loaded = allPages.reduce((acc, p) => acc + p.data.length, 0);
+      return loaded < lastPage.total ? allPages.length : undefined;
     },
     enabled: !!placeId,
   });

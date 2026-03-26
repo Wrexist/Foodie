@@ -21,9 +21,11 @@ export function ReviewCard({ review, showUser = true }: ReviewCardProps) {
       <GlassCard>
         {showUser && (
           <View style={styles.userRow}>
-            <Avatar size="sm" />
+            <Avatar uri={review.user?.avatar_url} size="sm" />
             <View style={styles.userInfo}>
-              <Text variant="subhead">Anonymous</Text>
+              <Text variant="subhead">
+                {review.user?.display_name ?? review.user?.username ?? 'Anonymous'}
+              </Text>
               <Text variant="caption1" color={colors.textTertiary}>
                 {formatRelativeDate(review.created_at)}
               </Text>

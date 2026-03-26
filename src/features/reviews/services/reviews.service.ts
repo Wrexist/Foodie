@@ -16,7 +16,8 @@ export const reviewsService = {
         *,
         place:places(*),
         review_items(*),
-        review_photos(*)
+        review_photos(*),
+        user:users!user_id(id, display_name, username, avatar_url)
       `)
       .eq('id', id)
       .single();
@@ -34,7 +35,8 @@ export const reviewsService = {
         *,
         place:places(*),
         review_items(*),
-        review_photos(*)
+        review_photos(*),
+        user:users!user_id(id, display_name, username, avatar_url)
       `, { count: 'exact' })
       .eq('user_id', userId)
       .order('visit_date', { ascending: false })
@@ -47,21 +49,21 @@ export const reviewsService = {
     const from = page * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from('reviews')
       .select(`
         *,
         place:places(*),
         review_items(*),
         review_photos(*),
-        user:users(id, display_name, username, avatar_url)
-      `)
+        user:users!user_id(id, display_name, username, avatar_url)
+      `, { count: 'exact' })
       .eq('place_id', placeId)
       .eq('is_private', false)
       .order('created_at', { ascending: false })
       .range(from, to);
     if (error) throw error;
-    return data ?? [];
+    return { data: data ?? [], total: count ?? 0 };
   },
 
   async create(payload: CreateReviewPayload) {

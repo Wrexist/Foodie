@@ -27,7 +27,7 @@ export default function HomeScreen() {
     isRefetching,
   } = useActivityFeed();
 
-  const feedItems = feedData?.pages.flat() ?? [];
+  const feedItems = feedData?.pages.flatMap((p) => p.data) ?? [];
 
   const renderItem = useCallback(({ item }: { item: ReviewFull }) => (
     <View style={styles.cardWrapper}>

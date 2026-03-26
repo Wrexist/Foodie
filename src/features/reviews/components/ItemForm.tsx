@@ -21,15 +21,18 @@ export function ItemForm() {
   const handleAdd = () => {
     if (!name.trim()) return;
 
-    addItem({
-      name: name.trim(),
-      category,
-      score: score > 0 ? score : undefined,
-      notes: notes.trim() || undefined,
-      photoUris: [],
-    });
-
-    router.back();
+    try {
+      addItem({
+        name: name.trim(),
+        category,
+        score: score > 0 ? score : undefined,
+        notes: notes.trim() || undefined,
+        photoUris: [],
+      });
+      router.back();
+    } catch {
+      // Keep the form open so the user doesn't lose input
+    }
   };
 
   return (

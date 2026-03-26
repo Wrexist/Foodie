@@ -8,22 +8,24 @@ import { Button } from '@/components/ui/Button';
 import { ReviewForm } from '@/features/reviews/components/ReviewForm';
 import { useCreateReview } from '@/features/reviews/hooks/useCreateReview';
 import { useDraftStore } from '@/stores/draft.store';
+import { useAuthStore } from '@/stores/auth.store';
 import { colors, spacing } from '@/design-system/tokens';
 
 export default function AddReviewModal() {
   const draft = useDraftStore((s) => s.draft);
+  const user = useAuthStore((s) => s.user);
   const createReview = useCreateReview();
 
-  const canPublish = !!draft.placeId && !!draft.overallScore && draft.overallScore > 0;
+  const canPublish = !!draft.placeId && !!draft.overallScore && draft.overallScore > 0 && !!user?.id;
 
   const handlePublish = () => {
-    if (!draft.placeId || !draft.overallScore) return;
+    if (!draft.placeId || !draft.overallScore || !user?.id) return;
 
     createReview.mutate(
       {
         review: {
           place_id: draft.placeId,
-          user_id: '', // set by RLS/trigger
+          user_id: user.id,
           overall_score: draft.overallScore,
           notes: draft.notes ?? null,
           visit_date: draft.visitDate ?? new Date().toISOString().split('T')[0],

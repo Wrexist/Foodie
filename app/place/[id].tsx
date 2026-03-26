@@ -32,7 +32,7 @@ export default function PlaceDetailScreen() {
     isRefetching,
   } = usePlaceReviews(id);
 
-  const reviews = reviewsData?.pages.flat() ?? [];
+  const reviews = reviewsData?.pages.flatMap((p) => p.data) ?? [];
 
   const handleToggleSave = () => {
     haptics.light();

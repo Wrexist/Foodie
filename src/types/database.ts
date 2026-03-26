@@ -366,4 +366,10 @@ export type Tag = TagRow;
 
 export type ReviewWithPlace = Review & { place: Place };
 export type ReviewWithItems = Review & { review_items: ReviewItem[] };
-export type ReviewFull = Review & { place: Place; review_items: ReviewItem[]; review_photos: ReviewPhotoRow[] };
+export interface ReviewUser {
+  id: string;
+  username: string;
+  display_name: string;
+  avatar_url: string | null;
+}
+export type ReviewFull = Review & { place: Place; review_items: ReviewItem[]; review_photos: ReviewPhotoRow[]; user?: ReviewUser };

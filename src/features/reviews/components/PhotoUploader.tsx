@@ -27,16 +27,20 @@ export function PhotoUploader({
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsMultipleSelection: true,
-      selectionLimit: remaining,
-      quality: PHOTO_QUALITY,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsMultipleSelection: true,
+        selectionLimit: remaining,
+        quality: PHOTO_QUALITY,
+      });
 
-    if (!result.canceled && result.assets.length > 0) {
-      haptics.light();
-      onAdd(result.assets.map((a) => a.uri));
+      if (!result.canceled && result.assets.length > 0) {
+        haptics.light();
+        onAdd(result.assets.map((a) => a.uri));
+      }
+    } catch (error) {
+      Alert.alert('Photo Error', 'Could not open photo library. Please check your permissions.');
     }
   };
 

@@ -64,15 +64,15 @@ export const socialService = {
     const from = page * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from('activity_feed_events')
       .select(`
         *,
         actor:users!actor_id(id, display_name, username, avatar_url)
-      `)
+      `, { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(from, to);
     if (error) throw error;
-    return data ?? [];
+    return { data: data ?? [], total: count ?? 0 };
   },
 };
