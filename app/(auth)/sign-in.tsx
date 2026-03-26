@@ -86,6 +86,14 @@ export default function SignInScreen() {
               loading={signIn.isPending}
               onPress={handleSubmit(onSubmit)}
             />
+            <Pressable
+              onPress={() => router.push('/(auth)/forgot-password')}
+              style={styles.forgotLink}
+            >
+              <Text variant="subhead" color={colors.accentGold}>
+                Forgot password?
+              </Text>
+            </Pressable>
           </View>
 
           <View style={styles.divider}>
@@ -133,6 +141,9 @@ const styles = StyleSheet.create({
   form: {
     gap: spacing.lg,
     marginBottom: spacing.xl,
+  },
+  forgotLink: {
+    alignSelf: 'flex-end',
   },
   divider: {
     flexDirection: 'row',

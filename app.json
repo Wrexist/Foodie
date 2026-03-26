@@ -40,6 +40,19 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 200
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Palate needs access to your photos to add images to your reviews.",
+          "cameraPermission": "Palate needs camera access to take photos for your reviews."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Palate uses your location to show nearby restaurants on the map."
+        }
       ]
     ],
     "experiments": {

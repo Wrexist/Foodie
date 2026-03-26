@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import RNMapView, { Marker, Callout } from 'react-native-maps';
 import { router } from 'expo-router';
 import { PinCallout } from './PinCallout';
+import { useLocationPermission } from '@/hooks/useLocationPermission';
 import type { MapPin } from '../hooks/useMapPins';
 import { colors } from '@/design-system/tokens';
 
@@ -36,6 +37,8 @@ const DEFAULT_REGION = {
 };
 
 export function DiningMapView({ pins, initialRegion }: DiningMapViewProps) {
+  const locationGranted = useLocationPermission();
+
   const region = initialRegion ?? (pins.length > 0
     ? {
         latitude: pins[0].latitude,
@@ -51,7 +54,7 @@ export function DiningMapView({ pins, initialRegion }: DiningMapViewProps) {
       initialRegion={region}
       customMapStyle={DARK_MAP_STYLE}
       userInterfaceStyle="dark"
-      showsUserLocation
+      showsUserLocation={locationGranted}
       showsMyLocationButton={false}
     >
       {pins.map((pin) => (
