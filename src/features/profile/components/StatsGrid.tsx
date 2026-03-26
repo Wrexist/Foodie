@@ -14,7 +14,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
   return (
     <View style={styles.grid}>
       <GlassCard style={styles.card}>
-        <Text variant="title1" color={colors.accentGold}>
+        <Text variant="title2" color={colors.accentGold}>
           {stats.reviewCount}
         </Text>
         <Text variant="caption1" color={colors.textSecondary}>
@@ -22,7 +22,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
         </Text>
       </GlassCard>
       <GlassCard style={styles.card}>
-        <Text variant="title1" color={colors.accentRose}>
+        <Text variant="title2" color={colors.accentRose}>
           {stats.averageScore > 0 ? formatScore(stats.averageScore) : '—'}
         </Text>
         <Text variant="caption1" color={colors.textSecondary}>

@@ -23,7 +23,7 @@ export function ScoreInput({ value, onChange, max = 10 }: ScoreInputProps) {
             <Pressable
               key={score}
               onPress={() => {
-                haptics.selection();
+                haptics.light();
                 onChange(score);
               }}
               style={[
@@ -61,9 +61,9 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   dot: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: colors.glassFill,
     alignItems: 'center',
     justifyContent: 'center',

@@ -171,6 +171,19 @@ export const typography = {
   },
 } as const;
 
+export const animation = {
+  fast: 150,
+  normal: 250,
+  slow: 400,
+  spring: { damping: 20, stiffness: 300 },
+} as const;
+
+export const glass = {
+  card: { intensity: 40, fill: 'rgba(255, 255, 255, 0.06)' },
+  sheet: { intensity: 60, fill: 'rgba(255, 255, 255, 0.08)' },
+  elevated: { intensity: 50, fill: 'rgba(255, 255, 255, 0.10)' },
+} as const;
+
 export type ColorToken = keyof typeof colors;
 export type SpacingToken = keyof typeof spacing;
 export type RadiusToken = keyof typeof radii;

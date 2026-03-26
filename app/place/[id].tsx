@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/layout/Screen';
 import { Header } from '@/components/layout/Header';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Skeleton, SkeletonCard } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ReviewCard } from '@/components/shared/ReviewCard';
 import { PlaceHeader } from '@/features/places/components/PlaceHeader';
@@ -35,7 +35,11 @@ export default function PlaceDetailScreen() {
   const reviews = reviewsData?.pages.flatMap((p) => p.data) ?? [];
 
   const handleToggleSave = () => {
-    haptics.light();
+    if (isSaved) {
+      haptics.light();
+    } else {
+      haptics.success();
+    }
     toggleSave.mutate({ placeId: id, isSaved: !!isSaved });
   };
 
@@ -69,7 +73,16 @@ export default function PlaceDetailScreen() {
           <View style={styles.headerSection}>
             {placeLoading ? (
               <View style={styles.loadingContainer}>
-                <Skeleton width="100%" height={200} radius={radii.card} />
+                <Skeleton width="100%" height={24} radius={radii.sm} />
+                <Skeleton width="60%" height={16} radius={radii.sm} />
+                <View style={styles.loadingBadgeRow}>
+                  <Skeleton width={64} height={24} radius={radii.full} />
+                  <Skeleton width={48} height={24} radius={radii.full} />
+                </View>
+                <View style={styles.loadingStatsRow}>
+                  <Skeleton width={80} height={40} radius={radii.sm} />
+                  <Skeleton width={80} height={40} radius={radii.sm} />
+                </View>
               </View>
             ) : place ? (
               <PlaceHeader
@@ -105,9 +118,27 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
   cardWrapper: {
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   loadingContainer: {
-    gap: spacing.lg,
+    backgroundColor: colors.glassFill,
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.glassStroke,
+    padding: spacing.lg,
+    gap: spacing.md,
+  },
+  loadingBadgeRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
+  loadingStatsRow: {
+    flexDirection: 'row',
+    gap: spacing['2xl'],
+    marginTop: spacing.sm,
+    paddingTop: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.divider,
   },
 });

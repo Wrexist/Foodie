@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { ScoreInput } from '@/features/reviews/components/ScoreInput';
 import type { JournalFilters } from '../types';
 import { colors, spacing } from '@/design-system/tokens';
+import { haptics } from '@/design-system/haptics';
 
 interface FilterSheetProps {
   visible: boolean;
@@ -53,7 +54,10 @@ export function FilterSheet({
                   styles.chip,
                   filters.sortBy === opt.value && styles.chipActive,
                 ]}
-                onPress={() => onUpdate({ sortBy: opt.value })}
+                onPress={() => {
+                  haptics.selection();
+                  onUpdate({ sortBy: opt.value });
+                }}
               >
                 <Text
                   variant="subhead"
@@ -69,11 +73,12 @@ export function FilterSheet({
             ))}
             <Pressable
               style={styles.orderToggle}
-              onPress={() =>
+              onPress={() => {
+                haptics.light();
                 onUpdate({
                   sortOrder: filters.sortOrder === 'asc' ? 'desc' : 'asc',
-                })
-              }
+                });
+              }}
             >
               <Ionicons
                 name={
@@ -167,6 +172,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     gap: spacing.md,
-    marginTop: spacing['2xl'],
+    marginTop: spacing['3xl'],
   },
 });

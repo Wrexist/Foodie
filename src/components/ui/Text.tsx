@@ -29,8 +29,9 @@ export function Text({
 }
 
 export function Heading({
+  variant = 'title1',
   style,
   ...props
 }: Omit<TextProps, 'variant'> & { variant?: 'largeTitle' | 'title1' | 'title2' | 'title3' }) {
-  return <Text variant="title1" {...props} style={style} />;
+  return <Text variant={variant} {...props} style={style} />;
 }

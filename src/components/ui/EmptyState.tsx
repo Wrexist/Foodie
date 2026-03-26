@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing } from '@/design-system/tokens';
+import { colors, spacing, animation } from '@/design-system/tokens';
 import { Text } from './Text';
 import { Button } from './Button';
 
@@ -21,11 +22,14 @@ export function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <View style={styles.container}>
+    <Animated.View
+      entering={FadeIn.duration(300).delay(150)}
+      style={styles.container}
+    >
       <View style={styles.iconContainer}>
-        <Ionicons name={icon} size={48} color={colors.textTertiary} />
+        <Ionicons name={icon} size={44} color={colors.textSecondary} />
       </View>
-      <Text variant="title3" align="center" style={styles.title}>
+      <Text variant="headline" align="center" style={styles.title}>
         {title}
       </Text>
       {subtitle && (
@@ -47,7 +51,7 @@ export function EmptyState({
           style={styles.action}
         />
       )}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -59,16 +63,18 @@ const styles = StyleSheet.create({
     padding: spacing['3xl'],
   },
   iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     backgroundColor: colors.glassFill,
+    borderWidth: 1,
+    borderColor: colors.glassStroke,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.xl,
   },
   title: {
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
   },
   subtitle: {
     marginBottom: spacing.xl,

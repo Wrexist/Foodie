@@ -9,6 +9,7 @@ import { ReviewForm } from '@/features/reviews/components/ReviewForm';
 import { useCreateReview } from '@/features/reviews/hooks/useCreateReview';
 import { useDraftStore } from '@/stores/draft.store';
 import { useAuthStore } from '@/stores/auth.store';
+import { haptics } from '@/design-system/haptics';
 import { colors, spacing } from '@/design-system/tokens';
 
 export default function AddReviewModal() {
@@ -41,9 +42,11 @@ export default function AddReviewModal() {
       },
       {
         onSuccess: () => {
+          haptics.success();
           router.back();
         },
         onError: (err) => {
+          haptics.error();
           Alert.alert('Error', err.message);
         },
       }
@@ -53,11 +56,17 @@ export default function AddReviewModal() {
   return (
     <Screen scroll edges={['top', 'bottom']}>
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
-          <Ionicons name="close" size={28} color={colors.textPrimary} />
+        <Pressable
+          style={styles.closeButton}
+          onPress={() => {
+            haptics.light();
+            router.back();
+          }}
+        >
+          <Ionicons name="close" size={22} color={colors.textPrimary} />
         </Pressable>
         <Text variant="headline">New Review</Text>
-        <View style={{ width: 28 }} />
+        <View style={{ width: 36 }} />
       </View>
 
       <View style={styles.content}>
@@ -85,9 +94,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
   },
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.glassFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   content: {
     padding: spacing.lg,
-    gap: spacing.lg,
+    gap: spacing.xl,
     paddingBottom: spacing['5xl'],
   },
   publishButton: {

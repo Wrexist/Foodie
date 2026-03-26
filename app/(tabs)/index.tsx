@@ -6,11 +6,12 @@ import { Text } from '@/components/ui/Text';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Avatar } from '@/components/ui/Avatar';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { SkeletonCard } from '@/components/ui/Skeleton';
 import { ReviewCard } from '@/components/shared/ReviewCard';
 import { useAuthStore } from '@/stores/auth.store';
 import { useProfileStats } from '@/features/profile/hooks/useProfileStats';
 import { useActivityFeed } from '@/features/social/hooks/useActivityFeed';
+import { haptics } from '@/design-system/haptics';
 import type { ReviewFull } from '@/types/database';
 import { colors, spacing, radii } from '@/design-system/tokens';
 
@@ -28,6 +29,11 @@ export default function HomeScreen() {
   } = useActivityFeed();
 
   const feedItems = feedData?.pages.flatMap((p) => p.data) ?? [];
+
+  const handleRefresh = async () => {
+    await refetch();
+    haptics.medium();
+  };
 
   const renderItem = useCallback(({ item }: { item: ReviewFull }) => (
     <View style={styles.cardWrapper}>
@@ -50,7 +56,7 @@ export default function HomeScreen() {
         refreshControl={
           <RefreshControl
             refreshing={isRefetching}
-            onRefresh={refetch}
+            onRefresh={handleRefresh}
             tintColor={colors.accentGold}
           />
         }
@@ -58,8 +64,12 @@ export default function HomeScreen() {
           <>
             <View style={styles.header}>
               <View>
-                <Text variant="footnote" color={colors.textSecondary}>
-                  Welcome back
+                <Text
+                  variant="caption1"
+                  color={colors.textSecondary}
+                  style={styles.overline}
+                >
+                  WELCOME BACK
                 </Text>
                 <Text variant="title2">
                   {user?.user_metadata?.display_name ?? 'Foodie'}
@@ -68,10 +78,11 @@ export default function HomeScreen() {
               <Avatar uri={user?.user_metadata?.avatar_url} size="md" />
             </View>
 
-            <GlassCard style={styles.statsCard}>
+            <GlassCard style={styles.statsCard} animated>
               <Text variant="subhead" color={colors.textSecondary}>
                 Your taste journey
               </Text>
+              <View style={styles.statsDivider} />
               <View style={styles.statsRow}>
                 <StatItem label="Reviews" value={String(stats?.reviewCount ?? 0)} />
                 <StatItem
@@ -82,14 +93,18 @@ export default function HomeScreen() {
               </View>
             </GlassCard>
 
-            <Text variant="title3" style={styles.sectionTitle}>
+            <Text
+              variant="title3"
+              color={colors.textSecondary}
+              style={styles.sectionTitle}
+            >
               Recent Activity
             </Text>
 
             {isLoading && (
               <View style={styles.loadingContainer}>
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} width="100%" height={180} radius={radii.card} />
+                  <SkeletonCard key={i} />
                 ))}
               </View>
             )}
@@ -114,7 +129,7 @@ export default function HomeScreen() {
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.statItem}>
-      <Text variant="title2" color={colors.accentGold}>
+      <Text variant="title3" color={colors.accentGold}>
         {value}
       </Text>
       <Text variant="caption1" color={colors.textSecondary}>
@@ -133,17 +148,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    paddingTop: spacing['2xl'],
     paddingBottom: spacing.xl,
+  },
+  overline: {
+    letterSpacing: 1.5,
+    marginBottom: spacing.xs,
   },
   statsCard: {
     marginHorizontal: spacing.lg,
     marginBottom: spacing.xl,
   },
+  statsDivider: {
+    height: 1,
+    backgroundColor: colors.divider,
+    marginTop: spacing.md,
+    marginBottom: spacing.lg,
+  },
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: spacing.lg,
   },
   statItem: {
     alignItems: 'center',
@@ -151,11 +175,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     paddingHorizontal: spacing.lg,
+    marginTop: spacing.sm,
     marginBottom: spacing.lg,
   },
   cardWrapper: {
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   loadingContainer: {
     paddingHorizontal: spacing.lg,

@@ -21,6 +21,8 @@ const sizes: Record<AvatarSize, number> = {
 
 export function Avatar({ uri, size = 'md', showBorder = false }: AvatarProps) {
   const s = sizes[size];
+  const hasRing = showBorder && size === 'xl';
+  const imageSize = hasRing ? s - 4 : s;
 
   return (
     <View
@@ -37,7 +39,7 @@ export function Avatar({ uri, size = 'md', showBorder = false }: AvatarProps) {
       {uri ? (
         <Image
           source={{ uri }}
-          style={{ width: s, height: s, borderRadius: s / 2 }}
+          style={{ width: imageSize, height: imageSize, borderRadius: imageSize / 2 }}
           contentFit="cover"
           transition={200}
         />

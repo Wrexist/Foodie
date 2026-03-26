@@ -31,12 +31,16 @@ export function ProfileHeader({
       <Text variant="title2" style={styles.name}>
         {user.display_name}
       </Text>
-      <Text variant="subhead" color={colors.textSecondary}>
+      <Text
+        variant="subhead"
+        color={colors.textSecondary}
+        style={{ letterSpacing: 0.5 }}
+      >
         @{user.username}
       </Text>
       {user.bio && (
         <Text
-          variant="body"
+          variant="callout"
           color={colors.textSecondary}
           align="center"
           style={styles.bio}
@@ -73,7 +77,7 @@ export function ProfileHeader({
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.stat}>
-      <Text variant="title3">{value}</Text>
+      <Text variant="title2" color={colors.accentGold}>{value}</Text>
       <Text variant="caption1" color={colors.textSecondary}>
         {label}
       </Text>

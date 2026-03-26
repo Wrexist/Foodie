@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, StyleSheet, ViewStyle, useWindowDimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors, radii, spacing } from '@/design-system/tokens';
 
 interface SkeletonProps {
@@ -22,33 +23,44 @@ export function Skeleton({
   radius = radii.sm,
   style,
 }: SkeletonProps) {
-  const opacity = useSharedValue(0.3);
+  const { width: screenWidth } = useWindowDimensions();
+  const shimmerWidth = typeof width === 'number' ? width : screenWidth;
+  const translateX = useSharedValue(-shimmerWidth);
 
   useEffect(() => {
-    opacity.value = withRepeat(
-      withTiming(0.7, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+    translateX.value = withRepeat(
+      withTiming(shimmerWidth, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
       -1,
-      true
+      false
     );
-  }, [opacity]);
+  }, [translateX, shimmerWidth]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
+  const shimmerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
   }));
 
   return (
-    <Animated.View
+    <View
       style={[
         {
           width: width as number,
           height,
           borderRadius: radius,
           backgroundColor: colors.glassFill,
+          overflow: 'hidden',
         },
-        animatedStyle,
         style,
       ]}
-    />
+    >
+      <Animated.View style={[StyleSheet.absoluteFill, shimmerStyle]}>
+        <LinearGradient
+          colors={['transparent', 'rgba(255, 255, 255, 0.08)', 'transparent']}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
+    </View>
   );
 }
 
@@ -67,8 +79,62 @@ export function SkeletonText({ lines = 3 }: { lines?: number }) {
   );
 }
 
+export function SkeletonCard() {
+  return (
+    <View style={styles.card}>
+      <View style={styles.cardUserRow}>
+        <Skeleton width={32} height={32} radius={16} />
+        <View style={styles.cardUserInfo}>
+          <Skeleton width={120} height={14} radius={radii.sm} />
+          <Skeleton width={80} height={10} radius={radii.sm} />
+        </View>
+      </View>
+      <Skeleton width="100%" height={16} radius={radii.sm} style={{ marginTop: spacing.md }} />
+      <Skeleton width="70%" height={14} radius={radii.sm} style={{ marginTop: spacing.sm }} />
+      <View style={styles.cardBadgeRow}>
+        <Skeleton width={64} height={22} radius={radii.full} />
+        <Skeleton width={48} height={22} radius={radii.full} />
+      </View>
+    </View>
+  );
+}
+
+export function SkeletonProfile() {
+  return (
+    <View style={styles.profile}>
+      <Skeleton width={80} height={80} radius={40} />
+      <Skeleton width={160} height={18} radius={radii.sm} style={{ marginTop: spacing.md }} />
+      <Skeleton width={100} height={14} radius={radii.sm} style={{ marginTop: spacing.sm }} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   textContainer: {
     gap: spacing.xs,
+  },
+  card: {
+    backgroundColor: colors.glassFill,
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.glassStroke,
+    padding: spacing.lg,
+  },
+  cardUserRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  cardUserInfo: {
+    gap: spacing.xs,
+  },
+  cardBadgeRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  profile: {
+    alignItems: 'center',
+    paddingVertical: spacing['2xl'],
   },
 });

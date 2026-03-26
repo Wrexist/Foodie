@@ -1,13 +1,17 @@
 import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { Text } from '@/components/ui/Text';
 import { Badge } from '@/components/ui/Badge';
 import { GlassCard } from '@/components/ui/GlassCard';
 import type { PlaceRow } from '@/types/database';
-import { colors, spacing } from '@/design-system/tokens';
+import { colors, spacing, animation } from '@/design-system/tokens';
 import { formatScore } from '@/utils/format';
-import { haptics } from '@/design-system/haptics';
 
 interface PlaceHeaderProps {
   place: PlaceRow;
@@ -24,8 +28,22 @@ export function PlaceHeader({
   isSaved,
   onToggleSave,
 }: PlaceHeaderProps) {
+  const saveScale = useSharedValue(1);
+
+  const saveAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: saveScale.value }],
+  }));
+
+  const handleSavePress = () => {
+    saveScale.value = withSpring(1.2, animation.spring);
+    setTimeout(() => {
+      saveScale.value = withSpring(1, animation.spring);
+    }, 100);
+    onToggleSave();
+  };
+
   return (
-    <GlassCard>
+    <GlassCard animated>
       <View style={styles.topRow}>
         <View style={styles.nameSection}>
           <Text variant="title2">{place.name}</Text>
@@ -35,18 +53,14 @@ export function PlaceHeader({
             </Text>
           )}
         </View>
-        <Pressable
-          onPress={() => {
-            haptics.light();
-            onToggleSave();
-          }}
-          hitSlop={8}
-        >
-          <Ionicons
-            name={isSaved ? 'bookmark' : 'bookmark-outline'}
-            size={26}
-            color={isSaved ? colors.accentGold : colors.textTertiary}
-          />
+        <Pressable onPress={handleSavePress} hitSlop={8}>
+          <Animated.View style={saveAnimatedStyle}>
+            <Ionicons
+              name={isSaved ? 'bookmark' : 'bookmark-outline'}
+              size={26}
+              color={isSaved ? colors.accentGold : colors.textTertiary}
+            />
+          </Animated.View>
         </Pressable>
       </View>
 
@@ -95,7 +109,7 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: spacing['2xl'],
+    justifyContent: 'space-around',
     marginTop: spacing.lg,
     paddingTop: spacing.lg,
     borderTopWidth: 1,

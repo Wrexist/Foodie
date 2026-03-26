@@ -6,6 +6,7 @@ import { Text } from '@/components/ui/Text';
 import { JournalList } from '@/features/journal/components/JournalList';
 import { FilterSheet } from '@/features/journal/components/FilterSheet';
 import { useJournalFilters } from '@/features/journal/hooks/useJournalFilters';
+import { haptics } from '@/design-system/haptics';
 import { colors, spacing } from '@/design-system/tokens';
 
 export default function JournalScreen() {
@@ -18,7 +19,10 @@ export default function JournalScreen() {
         <Text variant="largeTitle">Journal</Text>
         <Pressable
           style={styles.filterButton}
-          onPress={() => setFilterVisible(true)}
+          onPress={() => {
+            haptics.light();
+            setFilterVisible(true);
+          }}
         >
           <Ionicons name="options-outline" size={22} color={colors.textPrimary} />
         </Pressable>
@@ -43,14 +47,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.xl,
+    paddingTop: spacing['2xl'],
+    paddingBottom: spacing['2xl'],
   },
   filterButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: colors.glassFill,
+    borderWidth: 1,
+    borderColor: colors.glassStroke,
     alignItems: 'center',
     justifyContent: 'center',
   },

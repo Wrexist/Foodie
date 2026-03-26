@@ -3,8 +3,13 @@ import { View, Pressable, StyleSheet, Platform } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { colors, spacing, shadows } from '@/design-system/tokens';
+import { colors, spacing, shadows, animation } from '@/design-system/tokens';
 import { haptics } from '@/design-system/haptics';
 import { Text } from '@/components/ui/Text';
 
@@ -17,6 +22,12 @@ const TAB_ITEMS = [
 ] as const;
 
 export function TabBar({ state, navigation }: BottomTabBarProps) {
+  const fabScale = useSharedValue(1);
+
+  const fabAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: fabScale.value }],
+  }));
+
   const handleTabPress = (index: number, routeName: string) => {
     if (routeName === 'add') {
       haptics.medium();
@@ -55,10 +66,16 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               key={tab.name}
               style={styles.fabContainer}
               onPress={() => handleTabPress(index, tab.name)}
+              onPressIn={() => {
+                fabScale.value = withSpring(0.9, animation.spring);
+              }}
+              onPressOut={() => {
+                fabScale.value = withSpring(1, animation.spring);
+              }}
             >
-              <View style={styles.fab}>
+              <Animated.View style={[styles.fab, fabAnimatedStyle]}>
                 <Ionicons name="add" size={28} color={colors.background} />
-              </View>
+              </Animated.View>
             </Pressable>
           );
         }
@@ -73,16 +90,17 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           >
             <Ionicons
               name={isActive ? tab.activeIcon : tab.icon}
-              size={22}
+              size={24}
               color={isActive ? colors.accentGold : colors.textTertiary}
             />
             <Text
-              variant="caption2"
+              variant="caption1"
               color={isActive ? colors.accentGold : colors.textTertiary}
               style={styles.tabLabel}
             >
               {tab.label}
             </Text>
+            {isActive && <View style={styles.activeDot} />}
           </Pressable>
         );
       })}
@@ -127,6 +145,13 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     marginTop: 2,
+  },
+  activeDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.accentGold,
+    marginTop: 3,
   },
   fabContainer: {
     flex: 1,

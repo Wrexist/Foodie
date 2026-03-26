@@ -7,6 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import { colors, spacing, radii, typography } from '@/design-system/tokens';
+import { haptics } from '@/design-system/haptics';
 import { Text } from './Text';
 
 interface InputProps extends TextInputProps {
@@ -47,6 +48,7 @@ export function Input({
           selectionColor={colors.accentGold}
           onFocus={(e) => {
             setFocused(true);
+            haptics.selection();
             props.onFocus?.(e);
           }}
           onBlur={(e) => {
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     borderWidth: 1,
     borderColor: colors.glassStroke,
-    height: 48,
+    height: 52,
     paddingHorizontal: spacing.lg,
   },
   focused: {

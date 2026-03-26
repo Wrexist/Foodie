@@ -5,7 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/components/layout/Screen';
 import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { SkeletonCard, SkeletonProfile } from '@/components/ui/Skeleton';
 import { ReviewCard } from '@/components/shared/ReviewCard';
 import { ProfileHeader } from '@/features/profile/components/ProfileHeader';
 import { StatsGrid } from '@/features/profile/components/StatsGrid';
@@ -13,8 +14,9 @@ import { useProfile } from '@/features/profile/hooks/useProfile';
 import { useProfileStats } from '@/features/profile/hooks/useProfileStats';
 import { useUserReviews } from '@/features/reviews/hooks/useReviews';
 import { useAuthStore } from '@/stores/auth.store';
+import { haptics } from '@/design-system/haptics';
 import type { ReviewFull } from '@/types/database';
-import { colors, spacing, radii } from '@/design-system/tokens';
+import { colors, spacing } from '@/design-system/tokens';
 
 export default function ProfileScreen() {
   const currentUser = useAuthStore((s) => s.user);
@@ -63,18 +65,17 @@ export default function ProfileScreen() {
               <Text variant="largeTitle">Profile</Text>
               <Pressable
                 style={styles.settingsButton}
-                onPress={() => router.push('/settings')}
+                onPress={() => {
+                  haptics.light();
+                  router.push('/settings');
+                }}
               >
                 <Ionicons name="settings-outline" size={22} color={colors.textPrimary} />
               </Pressable>
             </View>
 
             {profileLoading ? (
-              <View style={styles.loadingProfile}>
-                <Skeleton width={80} height={80} radius={40} />
-                <Skeleton width={160} height={20} radius={8} />
-                <Skeleton width={120} height={16} radius={8} />
-              </View>
+              <SkeletonProfile />
             ) : profile && stats ? (
               <ProfileHeader
                 user={profile}
@@ -110,7 +111,7 @@ export default function ProfileScreen() {
             {reviewsLoading && (
               <View style={styles.loadingContainer}>
                 {Array.from({ length: 2 }).map((_, i) => (
-                  <Skeleton key={i} width="100%" height={160} radius={radii.card} />
+                  <SkeletonCard key={i} />
                 ))}
               </View>
             )}
@@ -118,11 +119,11 @@ export default function ProfileScreen() {
         }
         ListEmptyComponent={
           !reviewsLoading ? (
-            <View style={styles.emptyWrapper}>
-              <Text variant="body" color={colors.textSecondary} align="center">
-                No reviews yet. Start your dining journal!
-              </Text>
-            </View>
+            <EmptyState
+              icon="create-outline"
+              title="No reviews yet"
+              subtitle="Start your dining journal by adding your first review"
+            />
           ) : null
         }
       />
@@ -139,24 +140,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    paddingTop: spacing['2xl'],
+    paddingBottom: spacing.xl,
   },
   settingsButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: colors.glassFill,
+    borderWidth: 1,
+    borderColor: colors.glassStroke,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadingProfile: {
-    alignItems: 'center',
-    paddingVertical: spacing['2xl'],
-    gap: spacing.md,
-  },
   actions: {
     flexDirection: 'row',
-    gap: spacing.sm,
+    gap: spacing.md,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
   },
@@ -166,13 +165,10 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   loadingContainer: {
     paddingHorizontal: spacing.lg,
     gap: spacing.lg,
-  },
-  emptyWrapper: {
-    padding: spacing['2xl'],
   },
 });

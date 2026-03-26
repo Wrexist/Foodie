@@ -2,11 +2,11 @@ import React, { useCallback } from 'react';
 import { FlatList, View, StyleSheet, RefreshControl } from 'react-native';
 import { ReviewCard } from '@/components/shared/ReviewCard';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { SkeletonCard } from '@/components/ui/Skeleton';
 import { useJournal } from '../hooks/useJournal';
 import type { JournalFilters } from '../types';
 import type { ReviewFull } from '@/types/database';
-import { colors, spacing, radii } from '@/design-system/tokens';
+import { colors, spacing } from '@/design-system/tokens';
 
 interface JournalListProps {
   filters: JournalFilters;
@@ -30,7 +30,7 @@ export function JournalList({ filters }: JournalListProps) {
     return (
       <View style={styles.loadingContainer}>
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} width="100%" height={180} radius={radii.card} style={styles.skeletonCard} />
+          <SkeletonCard key={i} />
         ))}
       </View>
     );
@@ -71,13 +71,10 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
   cardWrapper: {
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   loadingContainer: {
     padding: spacing.lg,
     gap: spacing.lg,
-  },
-  skeletonCard: {
-    marginBottom: spacing.sm,
   },
 });
