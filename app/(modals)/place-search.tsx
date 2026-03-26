@@ -4,11 +4,19 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/components/layout/Screen';
 import { Text } from '@/components/ui/Text';
-import { Input } from '@/components/ui/Input';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { PlaceSearchInput } from '@/features/places/components/PlaceSearchInput';
+import { useDraftStore } from '@/stores/draft.store';
+import type { PlaceRow } from '@/types/database';
 import { colors, spacing } from '@/design-system/tokens';
 
 export default function PlaceSearchModal() {
+  const updateDraft = useDraftStore((s) => s.updateDraft);
+
+  const handleSelect = (place: PlaceRow) => {
+    updateDraft({ placeId: place.id, placeName: place.name });
+    router.back();
+  };
+
   return (
     <Screen edges={['top']}>
       <View style={styles.header}>
@@ -20,18 +28,8 @@ export default function PlaceSearchModal() {
       </View>
 
       <View style={styles.searchContainer}>
-        <Input
-          placeholder="Search restaurants, cafes, bars..."
-          leftIcon={<Ionicons name="search" size={20} color={colors.textTertiary} />}
-          autoFocus
-        />
+        <PlaceSearchInput onSelect={handleSelect} />
       </View>
-
-      <EmptyState
-        icon="search-outline"
-        title="Search for a place"
-        subtitle="Find restaurants, cafes, and bars to add to your review"
-      />
     </Screen>
   );
 }
@@ -46,6 +44,5 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.lg,
   },
 });
