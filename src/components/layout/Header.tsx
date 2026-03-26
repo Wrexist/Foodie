@@ -22,6 +22,8 @@ export function Header({ title, showBack = false, rightAction }: HeaderProps) {
             router.back();
           }}
           style={styles.backButton}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
         >
           <Ionicons name="chevron-back" size={20} color={colors.textPrimary} />
         </Pressable>

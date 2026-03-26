@@ -46,6 +46,7 @@ export function Input({
           style={[styles.input, style]}
           placeholderTextColor={colors.textTertiary}
           selectionColor={colors.accentGold}
+          accessibilityLabel={label}
           onFocus={(e) => {
             setFocused(true);
             haptics.selection();

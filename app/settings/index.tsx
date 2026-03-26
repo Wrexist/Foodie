@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Pressable, StyleSheet, Alert, Linking } from 'react-native';
 import { router } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { Ionicons } from '@expo/vector-icons';
 import { Screen } from '@/components/layout/Screen';
 import { Header } from '@/components/layout/Header';
@@ -38,17 +39,17 @@ export default function SettingsScreen() {
           <SettingsRow
             icon="person-outline"
             label="Edit Profile"
-            onPress={() => {}}
+            onPress={() => router.push('/settings/edit-profile')}
           />
           <SettingsRow
             icon="notifications-outline"
             label="Notifications"
-            onPress={() => {}}
+            onPress={() => router.push('/settings/notification-prefs')}
           />
           <SettingsRow
             icon="lock-closed-outline"
             label="Privacy"
-            onPress={() => {}}
+            onPress={() => router.push('/settings/privacy')}
           />
         </GlassCard>
 
@@ -65,17 +66,17 @@ export default function SettingsScreen() {
           <SettingsRow
             icon="help-circle-outline"
             label="Help & Support"
-            onPress={() => {}}
+            onPress={() => Linking.openURL('mailto:support@palateapp.com')}
           />
           <SettingsRow
             icon="document-text-outline"
             label="Terms of Service"
-            onPress={() => {}}
+            onPress={() => WebBrowser.openBrowserAsync('https://palateapp.com/terms')}
           />
           <SettingsRow
             icon="shield-outline"
             label="Privacy Policy"
-            onPress={() => {}}
+            onPress={() => WebBrowser.openBrowserAsync('https://palateapp.com/privacy')}
           />
         </GlassCard>
 

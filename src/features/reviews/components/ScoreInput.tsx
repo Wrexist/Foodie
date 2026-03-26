@@ -26,6 +26,9 @@ export function ScoreInput({ value, onChange, max = 10 }: ScoreInputProps) {
                 haptics.light();
                 onChange(score);
               }}
+              accessibilityRole="button"
+              accessibilityLabel={`Score ${score} of ${max}`}
+              accessibilityState={{ selected: isCurrent }}
               style={[
                 styles.dot,
                 isSelected && styles.dotSelected,

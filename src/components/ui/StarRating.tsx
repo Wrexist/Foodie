@@ -25,7 +25,7 @@ export function StarRating({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityLabel={`Rating: ${rating} out of ${maxRating} stars`}>
       {Array.from({ length: maxRating }).map((_, i) => {
         const starNumber = i + 1;
         const filled = starNumber <= rating;

@@ -24,6 +24,8 @@ export function UserRow({
     <Pressable
       style={styles.container}
       onPress={() => router.push(`/user/${user.id}`)}
+      accessibilityRole="button"
+      accessibilityLabel={`${user.display_name}, @${user.username}`}
     >
       <Avatar uri={user.avatar_url} size="md" />
       <View style={styles.info}>

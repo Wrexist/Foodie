@@ -26,7 +26,7 @@ export function EmptyState({
       entering={FadeIn.duration(300).delay(150)}
       style={styles.container}
     >
-      <View style={styles.iconContainer}>
+      <View style={styles.iconContainer} accessible={false}>
         <Ionicons name={icon} size={44} color={colors.textSecondary} />
       </View>
       <Text variant="headline" align="center" style={styles.title}>

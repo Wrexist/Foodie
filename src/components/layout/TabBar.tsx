@@ -72,6 +72,8 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               onPressOut={() => {
                 fabScale.value = withSpring(1, animation.spring);
               }}
+              accessibilityRole="button"
+              accessibilityLabel="Create new review"
             >
               <Animated.View style={[styles.fab, fabAnimatedStyle]}>
                 <Ionicons name="add" size={28} color={colors.background} />
@@ -87,6 +89,9 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             key={tab.name}
             style={styles.tab}
             onPress={() => handleTabPress(index, tab.name)}
+            accessibilityRole="tab"
+            accessibilityLabel={tab.label}
+            accessibilityState={{ selected: isActive }}
           >
             <Ionicons
               name={isActive ? tab.activeIcon : tab.icon}

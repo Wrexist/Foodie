@@ -22,7 +22,7 @@ export function Badge({ label, variant = 'default', style }: BadgeProps) {
   const v = variantStyles[variant];
 
   return (
-    <View style={[styles.badge, { backgroundColor: v.bg }, style]}>
+    <View style={[styles.badge, { backgroundColor: v.bg }, style]} accessibilityRole="text">
       <Text variant="caption1" color={v.text} style={{ fontWeight: '600' }}>
         {label}
       </Text>

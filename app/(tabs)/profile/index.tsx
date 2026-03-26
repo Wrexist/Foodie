@@ -10,6 +10,7 @@ import { SkeletonCard, SkeletonProfile } from '@/components/ui/Skeleton';
 import { ReviewCard } from '@/components/shared/ReviewCard';
 import { ProfileHeader } from '@/features/profile/components/ProfileHeader';
 import { StatsGrid } from '@/features/profile/components/StatsGrid';
+import { TasteProfileCard } from '@/features/ai/components/TasteProfileCard';
 import { useProfile } from '@/features/profile/hooks/useProfile';
 import { useProfileStats } from '@/features/profile/hooks/useProfileStats';
 import { useUserReviews } from '@/features/reviews/hooks/useReviews';
@@ -86,6 +87,8 @@ export default function ProfileScreen() {
             ) : null}
 
             {stats && <StatsGrid stats={stats} />}
+
+            <TasteProfileCard />
 
             <View style={styles.actions}>
               <Button

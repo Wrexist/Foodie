@@ -111,6 +111,9 @@ export function Button({
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ disabled: disabled || loading }}
         {...props}
       >
         {variant === 'primary' && (

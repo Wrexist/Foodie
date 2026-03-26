@@ -16,7 +16,11 @@ interface PlaceCardProps {
 
 export function PlaceCard({ place, onSave, isSaved = false }: PlaceCardProps) {
   return (
-    <Pressable onPress={() => router.push(`/place/${place.id}`)}>
+    <Pressable
+      onPress={() => router.push(`/place/${place.id}`)}
+      accessibilityRole="button"
+      accessibilityLabel={`${place.name}${place.cuisine_type ? `, ${place.cuisine_type}` : ''}`}
+    >
       <GlassCard>
         <View style={styles.row}>
           <View style={styles.info}>
@@ -38,7 +42,12 @@ export function PlaceCard({ place, onSave, isSaved = false }: PlaceCardProps) {
             </View>
           </View>
           {onSave && (
-            <Pressable onPress={onSave} hitSlop={8}>
+            <Pressable
+              onPress={onSave}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={isSaved ? 'Remove from saved places' : 'Save this place'}
+            >
               <Ionicons
                 name={isSaved ? 'bookmark' : 'bookmark-outline'}
                 size={24}

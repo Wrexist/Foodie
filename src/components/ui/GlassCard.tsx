@@ -71,6 +71,7 @@ export function GlassCard({
             onPress={handlePress}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
+            accessibilityRole="button"
           >
             {cardContent}
           </Pressable>

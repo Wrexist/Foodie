@@ -35,6 +35,7 @@ export function Avatar({ uri, size = 'md', showBorder = false }: AvatarProps) {
         },
         showBorder && styles.border,
       ]}
+      accessibilityLabel="Profile photo"
     >
       {uri ? (
         <Image

@@ -10,8 +10,16 @@ import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/auth.store';
 import { ThemeProvider, theme } from '@/design-system/theme';
 import { colors } from '@/design-system/tokens';
+import { QueryErrorBoundary } from '@/components/error/QueryErrorBoundary';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 
 SplashScreen.preventAutoHideAsync();
+
+function NetworkInit() {
+  useNetworkStatus();
+  return null;
+}
 
 export default function RootLayout() {
   const setSession = useAuthStore((s) => s.setSession);
@@ -38,30 +46,36 @@ export default function RootLayout() {
       <ThemeProvider value={theme}>
         <QueryClientProvider client={queryClient}>
           <StatusBar style="light" />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.background },
-              animation: 'slide_from_right',
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-              name="(modals)"
-              options={{
-                presentation: 'modal',
-                animation: 'slide_from_bottom',
+          <NetworkInit />
+          <OfflineBanner />
+          <QueryErrorBoundary>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.background },
+                animation: 'slide_from_right',
               }}
-            />
-            <Stack.Screen name="place/[id]" />
-            <Stack.Screen name="review/[id]" />
-            <Stack.Screen name="user/[id]" />
-            <Stack.Screen name="saved" />
-            <Stack.Screen name="collections" />
-            <Stack.Screen name="settings" />
-          </Stack>
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="(modals)"
+                options={{
+                  presentation: 'modal',
+                  animation: 'slide_from_bottom',
+                }}
+              />
+              <Stack.Screen name="place/[id]" />
+              <Stack.Screen name="review/[id]" />
+              <Stack.Screen name="user/[id]" />
+              <Stack.Screen name="saved" />
+              <Stack.Screen name="collections" />
+              <Stack.Screen name="settings" />
+              <Stack.Screen name="notifications" />
+              <Stack.Screen name="search" />
+            </Stack>
+          </QueryErrorBoundary>
         </QueryClientProvider>
       </ThemeProvider>
     </GestureHandlerRootView>

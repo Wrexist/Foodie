@@ -98,6 +98,11 @@ export interface Database {
         Insert: SubscriptionInsert;
         Update: SubscriptionUpdate;
       };
+      review_likes: {
+        Row: ReviewLikeRow;
+        Insert: ReviewLikeInsert;
+        Update: never;
+      };
       embeddings: {
         Row: EmbeddingRow;
         Insert: EmbeddingInsert;
@@ -392,3 +397,12 @@ export type CollectionWithCount = CollectionRow & {
 export type CollectionWithPlaces = CollectionRow & {
   collection_places: Array<{ place: PlaceRow }>;
 };
+
+// ── Review Like ──
+export interface ReviewLikeRow {
+  id: string;
+  review_id: string;
+  user_id: string;
+  created_at: string;
+}
+export type ReviewLikeInsert = Omit<ReviewLikeRow, 'id' | 'created_at'>;
