@@ -49,7 +49,9 @@ export const profileService = {
         .eq('follower_id', userId),
     ]);
 
-    const scores = ((reviewsResult.data as any[]) ?? []).map((r: any) => r.overall_score);
+    const scores = (reviewsResult.data ?? [])
+      .map((r: any) => r.overall_score)
+      .filter((s): s is number => s != null);
     const avgScore = scores.length > 0
       ? scores.reduce((a, b) => a + b, 0) / scores.length
       : 0;

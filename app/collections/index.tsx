@@ -13,10 +13,18 @@ import { useCollections, useCreateCollection } from '@/features/collections/hook
 import { useAuthStore } from '@/stores/auth.store';
 import { Modal, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import type { CollectionWithCount } from '@/types/database';
 import { colors, spacing, radii } from '@/design-system/tokens';
 
 export default function CollectionsScreen() {
-  const { data: collections, isLoading } = useCollections();
+  const {
+    data: collectionsData,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useCollections();
+  const collections = collectionsData?.pages.flatMap((p) => p.data) ?? [];
   const createCollection = useCreateCollection();
   const user = useAuthStore((s) => s.user);
   const [showCreate, setShowCreate] = useState(false);
@@ -31,7 +39,8 @@ export default function CollectionsScreen() {
         name: newName.trim(),
         description: newDescription.trim() || null,
         is_public: true,
-      } as any,
+        cover_image_url: null,
+      },
       {
         onSuccess: () => {
           setShowCreate(false);
@@ -43,9 +52,9 @@ export default function CollectionsScreen() {
     );
   };
 
-  const renderItem = useCallback(({ item }: { item: any }) => (
+  const renderItem = useCallback(({ item }: { item: CollectionWithCount }) => (
     <View style={styles.cardWrapper}>
-      <CollectionCard collection={item} placeCount={item.place_count ?? 0} />
+      <CollectionCard collection={item} placeCount={(item.collection_places as any)?.[0]?.count ?? 0} />
     </View>
   ), []);
 
@@ -74,11 +83,15 @@ export default function CollectionsScreen() {
         }
       />
       <FlatList
-        data={collections ?? []}
+        data={collections}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+        }}
+        onEndReachedThreshold={0.5}
         ListEmptyComponent={
           <EmptyState
             icon="grid-outline"

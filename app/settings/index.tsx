@@ -19,8 +19,12 @@ export default function SettingsScreen() {
         style: 'destructive',
         onPress: async () => {
           haptics.medium();
-          await supabase.auth.signOut();
-          router.replace('/(auth)/sign-in');
+          try {
+            await supabase.auth.signOut();
+            router.replace('/(auth)/sign-in');
+          } catch {
+            Alert.alert('Sign Out Failed', 'Something went wrong. Please try again.');
+          }
         },
       },
     ]);

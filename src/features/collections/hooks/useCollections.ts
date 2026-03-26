@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { collectionsService } from '../services/collections.service';
 import { useAuthStore } from '@/stores/auth.store';
 import type { CollectionInsert, CollectionUpdate } from '@/types/database';
@@ -6,9 +6,14 @@ import type { CollectionInsert, CollectionUpdate } from '@/types/database';
 export function useCollections() {
   const user = useAuthStore((s) => s.user);
 
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['collections', user?.id],
-    queryFn: () => collectionsService.getByUser(user!.id),
+    queryFn: ({ pageParam = 0 }) => collectionsService.getByUser(user!.id, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const loaded = allPages.reduce((acc, p) => acc + p.data.length, 0);
+      return loaded < lastPage.total ? allPages.length : undefined;
+    },
     enabled: !!user?.id,
   });
 }

@@ -21,7 +21,7 @@ export default function PublicProfileScreen() {
   const currentUser = useAuthStore((s) => s.user);
   const { data: profile, isLoading: profileLoading } = useProfile(id);
   const { data: stats } = useProfileStats(id);
-  const { data: isFollowing } = useIsFollowing(id);
+  const { data: isFollowing, isLoading: isFollowingLoading } = useIsFollowing(id);
   const toggleFollow = useToggleFollow();
   const {
     data: reviewsData,
@@ -37,8 +37,9 @@ export default function PublicProfileScreen() {
   const isOwnProfile = currentUser?.id === id;
 
   const handleFollow = () => {
+    if (isFollowingLoading || isFollowing === undefined) return;
     haptics.light();
-    toggleFollow.mutate({ targetUserId: id, isFollowing: !!isFollowing });
+    toggleFollow.mutate({ targetUserId: id, isFollowing });
   };
 
   const renderItem = useCallback(({ item }: { item: ReviewFull }) => (

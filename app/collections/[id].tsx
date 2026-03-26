@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PlaceCard } from '@/components/shared/PlaceCard';
 import { useCollectionDetail } from '@/features/collections/hooks/useCollections';
-import type { Place } from '@/types/database';
+import type { PlaceRow } from '@/types/database';
 import { spacing, radii } from '@/design-system/tokens';
 
 export default function CollectionDetailScreen() {
@@ -15,9 +15,11 @@ export default function CollectionDetailScreen() {
   const { data: collectionData, isLoading } = useCollectionDetail(id);
   const collection = collectionData as any;
 
-  const places = (collection as any)?.collection_places?.map((cp: any) => cp.place).filter(Boolean) ?? [];
+  const places: PlaceRow[] = collection?.collection_places
+    ?.map((cp: any) => cp.place)
+    .filter(Boolean) ?? [];
 
-  const renderItem = useCallback(({ item }: { item: Place }) => (
+  const renderItem = useCallback(({ item }: { item: PlaceRow }) => (
     <View style={styles.cardWrapper}>
       <PlaceCard place={item} />
     </View>
@@ -42,7 +44,7 @@ export default function CollectionDetailScreen() {
       <FlatList
         data={places}
         renderItem={renderItem}
-        keyExtractor={(item: Place) => item.id}
+        keyExtractor={(item: PlaceRow) => item.id}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={

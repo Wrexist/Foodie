@@ -104,7 +104,12 @@ export interface Database {
         Update: EmbeddingUpdate;
       };
     };
-    Functions: Record<string, never>;
+    Functions: {
+      nearby_places: {
+        Args: { lat: number; lng: number; radius_km: number };
+        Returns: PlaceRow[];
+      };
+    };
     Enums: {
       review_item_category: 'dish' | 'drink';
       activity_event_type: 'review' | 'follow' | 'save' | 'collection';
@@ -373,3 +378,17 @@ export interface ReviewUser {
   avatar_url: string | null;
 }
 export type ReviewFull = Review & { place: Place; review_items: ReviewItem[]; review_photos: ReviewPhotoRow[]; user?: ReviewUser };
+
+// ── Review with tags (for detail screen) ──
+export interface ReviewTagWithTag extends ReviewTagRow {
+  tag: TagRow;
+}
+export type ReviewFullWithTags = ReviewFull & { review_tags: ReviewTagWithTag[] };
+
+// ── Collection composites ──
+export type CollectionWithCount = CollectionRow & {
+  collection_places: [{ count: number }];
+};
+export type CollectionWithPlaces = CollectionRow & {
+  collection_places: Array<{ place: PlaceRow }>;
+};

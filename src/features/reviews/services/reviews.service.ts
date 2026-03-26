@@ -17,6 +17,7 @@ export const reviewsService = {
         place:places(*),
         review_items(*),
         review_photos(*),
+        review_tags(*, tag:tags(*)),
         user:users!user_id(id, display_name, username, avatar_url)
       `)
       .eq('id', id)

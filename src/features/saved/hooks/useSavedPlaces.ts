@@ -41,7 +41,7 @@ export function useToggleSave() {
       }
     },
     onSuccess: (_, { placeId }) => {
-      queryClient.invalidateQueries({ queryKey: ['saved-places'] });
+      queryClient.invalidateQueries({ queryKey: ['saved-places', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['is-saved', user?.id, placeId] });
     },
   });

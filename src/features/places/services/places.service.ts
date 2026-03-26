@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import type { PlaceInsert, PlaceUpdate } from '@/types/database';
+import type { PlaceInsert, PlaceUpdate, PlaceRow } from '@/types/database';
 import { PAGE_SIZE } from '@/lib/constants';
 
 export const placesService = {
@@ -24,19 +24,19 @@ export const placesService = {
   },
 
   async getNearby(lat: number, lng: number, radiusKm = 5) {
-    const { data, error } = await supabase.rpc('nearby_places' as never, {
+    const { data, error } = await (supabase.rpc as any)('nearby_places', {
       lat,
       lng,
       radius_km: radiusKm,
-    } as any);
+    });
     if (error) throw error;
-    return (data as never[]) ?? [];
+    return (data ?? []) as PlaceRow[];
   },
 
   async create(place: PlaceInsert) {
     const { data, error } = await supabase
       .from('places')
-      .insert(place as never)
+      .insert(place as any)
       .select()
       .single();
     if (error) throw error;
@@ -62,10 +62,11 @@ export const placesService = {
       .eq('is_private', false);
     if (error) throw error;
 
-    const rows = (data as any[]) ?? [];
-    const scores = rows.map((r) => r.overall_score);
+    const scores = (data ?? [])
+      .map((r: any) => r.overall_score)
+      .filter((s): s is number => s != null);
     const avgScore = scores.length > 0
-      ? scores.reduce((a: number, b: number) => a + b, 0) / scores.length
+      ? scores.reduce((a, b) => a + b, 0) / scores.length
       : 0;
 
     return {

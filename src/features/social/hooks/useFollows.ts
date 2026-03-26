@@ -34,8 +34,8 @@ export function useToggleFollow() {
     onSuccess: (_, { targetUserId }) => {
       queryClient.invalidateQueries({ queryKey: ['is-following', user?.id, targetUserId] });
       queryClient.invalidateQueries({ queryKey: ['profile-stats'] });
-      queryClient.invalidateQueries({ queryKey: ['followers'] });
-      queryClient.invalidateQueries({ queryKey: ['following'] });
+      queryClient.invalidateQueries({ queryKey: ['followers', targetUserId] });
+      queryClient.invalidateQueries({ queryKey: ['following', user?.id] });
     },
   });
 }

@@ -26,9 +26,10 @@ async function fetchMapPins(userId: string): Promise<MapPin[]> {
   const visitedMap = new Map<string, { scores: number[]; name: string; lat: number; lng: number }>();
 
   if (visitedResult.data) {
-    for (const row of (visitedResult.data as any[])) {
-      const place = row.place as { id: string; name: string; latitude: number; longitude: number } | null;
-      if (!place?.latitude || !place?.longitude) continue;
+    for (const r of visitedResult.data) {
+      const row = r as any;
+      const place = row.place as { id: string; name: string; latitude: number | null; longitude: number | null } | null;
+      if (place?.latitude == null || place?.longitude == null) continue;
 
       const existing = visitedMap.get(place.id);
       if (existing) {
@@ -59,9 +60,9 @@ async function fetchMapPins(userId: string): Promise<MapPin[]> {
   }
 
   if (savedResult.data) {
-    for (const row of (savedResult.data as any[])) {
-      const place = row.place as { id: string; name: string; latitude: number; longitude: number } | null;
-      if (!place?.latitude || !place?.longitude) continue;
+    for (const r of savedResult.data) {
+      const place = (r as any).place as { id: string; name: string; latitude: number | null; longitude: number | null } | null;
+      if (place?.latitude == null || place?.longitude == null) continue;
       if (visitedMap.has(place.id)) continue;
 
       pins.push({

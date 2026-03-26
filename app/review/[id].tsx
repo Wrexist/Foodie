@@ -13,12 +13,13 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { DishCard } from '@/components/shared/DishCard';
 import { useReview } from '@/features/reviews/hooks/useReviews';
 import { formatRelativeDate, formatScore } from '@/utils/format';
+import type { ReviewFullWithTags, ReviewItemRow } from '@/types/database';
 import { colors, spacing, radii } from '@/design-system/tokens';
 
 export default function ReviewDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data, isLoading } = useReview(id);
-  const review = data as any;
+  const review = data as ReviewFullWithTags | undefined;
 
   if (isLoading) {
     return (
@@ -95,20 +96,20 @@ export default function ReviewDetailScreen() {
             <Text variant="headline" style={styles.sectionTitle}>
               Dishes & Drinks
             </Text>
-            {review.review_items.map((item: any) => (
+            {review.review_items.map((item: ReviewItemRow) => (
               <DishCard key={item.id} item={item} />
             ))}
           </GlassCard>
         )}
 
-        {(review as any).review_tags?.length > 0 && (
+        {review.review_tags?.length > 0 && (
           <GlassCard>
             <Text variant="headline" style={styles.sectionTitle}>
               Tags
             </Text>
             <View style={styles.tagsRow}>
-              {(review as any).review_tags.map((rt: any, i: number) => (
-                <Badge key={i} label={rt.tag?.name ?? rt.tag_id} variant="sage" />
+              {review.review_tags.map((rt) => (
+                <Badge key={rt.id} label={rt.tag?.name ?? rt.tag_id} variant="sage" />
               ))}
             </View>
           </GlassCard>
